@@ -198,6 +198,26 @@
     "stack": "android"
   },
   {
+    "team": "wallace-ai",
+    "score": 20,
+    "breakdown": {
+      "ac": 9,
+      "visual": 3,
+      "code": 3,
+      "build": 2,
+      "tests": 2,
+      "prompt": 1
+    },
+    "graded_at": "2026-11-05T08:46:57Z",
+    "flags": [
+      "screenshot_mismatch"
+    ],
+    "status": "scored",
+    "pr": 19,
+    "updated_at": "2026-11-05T08:46:57Z",
+    "stack": "android"
+  },
+  {
     "team": "kaimumutz",
     "score": 18,
     "breakdown": {
@@ -328,16 +348,5 @@
     "status": "building",
     "pr": 20,
     "updated_at": "2026-11-05T08:45:38Z"
-  },
-  {
-    "team": "wallace-ai",
-    "score": null,
-    "breakdown": null,
-    "graded_at": null,
-    "flags": [],
-    "status": "grading",
-    "pr": 19,
-    "updated_at": "2026-11-05T08:46:35Z",
-    "stack": "android"
   }
 ]
