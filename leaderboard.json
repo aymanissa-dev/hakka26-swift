@@ -54,6 +54,24 @@
     "stack": "kmp"
   },
   {
+    "team": "kenronei",
+    "score": 25,
+    "breakdown": {
+      "ac": 10,
+      "visual": 6,
+      "code": 4,
+      "build": 2,
+      "tests": 2,
+      "prompt": 1
+    },
+    "graded_at": "2026-11-05T08:25:39Z",
+    "flags": [],
+    "status": "scored",
+    "pr": 4,
+    "updated_at": "2026-11-05T08:25:39Z",
+    "stack": "android"
+  },
+  {
     "team": "josendungu",
     "score": 24,
     "breakdown": {
@@ -124,24 +142,6 @@
     "pr": 13,
     "updated_at": "2026-11-05T08:19:54Z",
     "stack": "react-native"
-  },
-  {
-    "team": "kenronei",
-    "score": 23,
-    "breakdown": {
-      "ac": 9,
-      "visual": 6,
-      "code": 3,
-      "build": 2,
-      "tests": 2,
-      "prompt": 1
-    },
-    "graded_at": "2026-11-05T07:55:56Z",
-    "flags": [],
-    "status": "grading",
-    "pr": 4,
-    "updated_at": "2026-11-05T08:25:17Z",
-    "stack": "android"
   },
   {
     "team": "dsvishchov",
