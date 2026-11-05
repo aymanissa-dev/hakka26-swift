@@ -412,11 +412,11 @@
       "tests": 0,
       "prompt": 0
     },
-    "graded_at": "2026-11-05T09:20:42Z",
+    "graded_at": "2026-11-05T09:27:13Z",
     "flags": [],
-    "status": "building",
+    "status": "invalid",
     "pr": 2,
-    "updated_at": "2026-11-05T09:26:46Z",
+    "updated_at": "2026-11-05T09:27:13Z",
     "stack": "unknown"
   },
   {
