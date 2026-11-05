@@ -498,11 +498,11 @@
       "tests": 0,
       "prompt": 0
     },
-    "graded_at": "2026-11-05T09:39:12Z",
+    "graded_at": "2026-11-05T09:51:00Z",
     "flags": [],
-    "status": "building",
+    "status": "invalid",
     "pr": 26,
-    "updated_at": "2026-11-05T09:50:21Z",
+    "updated_at": "2026-11-05T09:51:00Z",
     "stack": "unknown"
   },
   {
