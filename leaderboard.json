@@ -420,5 +420,15 @@
     "status": "building",
     "pr": 24,
     "updated_at": "2026-11-05T09:19:54Z"
+  },
+  {
+    "team": "team",
+    "score": null,
+    "breakdown": null,
+    "graded_at": null,
+    "flags": [],
+    "status": "building",
+    "pr": 26,
+    "updated_at": "2026-11-05T09:24:10Z"
   }
 ]
