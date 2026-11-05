@@ -29,6 +29,19 @@ struct OtpDigitInput: View {
     }
 }
 
+enum OtpDigitText {
+    /// Keeps an empty box non-empty so UIKit still delivers backspace.
+    static let emptyMarker = "\u{200B}"
+
+    static func display(_ digit: String) -> String {
+        digit.isEmpty ? emptyMarker : digit
+    }
+
+    static func cleaned(_ raw: String) -> String {
+        raw.replacingOccurrences(of: emptyMarker, with: "")
+    }
+}
+
 struct OtpDigitBox: View {
     let index: Int
     let digit: String
@@ -117,6 +130,7 @@ struct OtpDigitField: UIViewRepresentable {
         field.smartQuotesType = .no
         field.smartInsertDeleteType = .no
         field.borderStyle = .none
+        field.isOpaque = false
         field.backgroundColor = .clear
         field.tintColor = .clear
         field.font = .systemFont(ofSize: 20, weight: .semibold)
@@ -133,11 +147,12 @@ struct OtpDigitField: UIViewRepresentable {
         context.coordinator.parent = self
         field.accessibilityLabel = accessibilityLabel
         field.accessibilityIdentifier = accessibilityIdentifier
-        field.accessibilityValue = text.isEmpty ? nil : text
+        field.accessibilityValue = text.isEmpty ? "" : text
         field.textColor = textColor
         field.font = .systemFont(ofSize: 20, weight: .semibold)
-        if field.text != text {
-            field.text = text
+        let shown = OtpDigitText.display(text)
+        if field.text != shown {
+            field.text = shown
         }
         guard isFocused, !field.isFirstResponder else { return }
         if field.window != nil {
@@ -170,10 +185,11 @@ struct OtpDigitField: UIViewRepresentable {
             shouldChangeCharactersIn range: NSRange,
             replacementString string: String
         ) -> Bool {
-            if string.isEmpty {
+            let cleaned = OtpDigitText.cleaned(string)
+            if cleaned.isEmpty {
                 return false
             }
-            parent.onInput(string)
+            parent.onInput(cleaned)
             return false
         }
     }

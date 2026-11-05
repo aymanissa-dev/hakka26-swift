@@ -96,11 +96,12 @@ struct OtpScreen: View {
 
     private func resendControl(_ palette: OtpPalette) -> some View {
         let counting = !store.state.canResend
+        let label = store.state.resendLabel
         return Button {
             store.send(.resend)
         } label: {
             if counting {
-                Text(OtpCopy.countdown(seconds: store.state.secondsRemaining))
+                Text(label)
                     .font(.system(size: 15))
                     .foregroundColor(palette.textSecondary)
             } else {
@@ -118,11 +119,7 @@ struct OtpScreen: View {
         .disabled(counting)
         .padding(.top, 18)
         .accessibilityIdentifier(OtpID.resend)
-        .accessibilityLabel(
-            counting
-                ? OtpCopy.countdown(seconds: store.state.secondsRemaining)
-                : OtpCopy.resendIdle
-        )
+        .accessibilityLabel(label)
     }
 
     private func submitButton(_ palette: OtpPalette) -> some View {

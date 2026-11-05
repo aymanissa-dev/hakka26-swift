@@ -70,6 +70,10 @@ struct OtpState: Equatable {
     var canSubmit: Bool { isComplete }
     var canResend: Bool { secondsRemaining == 0 }
 
+    var resendLabel: String {
+        canResend ? OtpCopy.resendIdle : OtpCopy.countdown(seconds: secondsRemaining)
+    }
+
     var statusMessage: String {
         switch status {
         case .idle:

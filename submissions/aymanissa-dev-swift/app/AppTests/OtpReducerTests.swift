@@ -175,6 +175,181 @@ final class OtpReducerTests: XCTestCase {
         XCTAssertEqual(OtpReducer.reduce(.initial, .input(index: 8, text: "1")), .initial)
     }
 
+    func testResendLabelIsCountdownUntilZeroThenTheIdleLine() {
+        XCTAssertEqual(OtpState.initial.resendLabel, "Resend in 0:30")
+        XCTAssertFalse(OtpState.initial.canResend)
+        var ticking = OtpState.initial
+        for seconds in stride(from: 30, through: 1, by: -1) {
+            ticking.secondsRemaining = seconds
+            let label = ticking.resendLabel
+            XCTAssertEqual(label, String(format: "Resend in 0:%02d", seconds))
+            XCTAssertFalse(label.contains("Didn't receive"))
+            XCTAssertFalse(ticking.canResend)
+        }
+        ticking.secondsRemaining = 0
+        XCTAssertTrue(ticking.canResend)
+        XCTAssertEqual(ticking.resendLabel, "Didn't receive the code? Resend")
+        XCTAssertFalse(ticking.resendLabel.hasSuffix("."))
+    }
+
+    func testCountdownMatchesEveryRemainingSecond() {
+        for seconds in 0...30 {
+            XCTAssertEqual(OtpCopy.countdown(seconds: seconds), String(format: "Resend in 0:%02d", seconds))
+        }
+        XCTAssertEqual(OtpCopy.countdown(seconds: -3), "Resend in 0:00")
+        XCTAssertEqual(OtpCopy.countdown(seconds: 90), "Resend in 0:59")
+    }
+
+    func testEmptySlotsStayBlankWhileATypedZeroIsKept() {
+        let typed = OtpReducer.reduce(.initial, .input(index: 0, text: "0"))
+        XCTAssertEqual(typed.digits, ["0", "", "", "", "", ""])
+        XCTAssertNotEqual(typed.digits[1], "0")
+        XCTAssertNotEqual(OtpCopy.placeholder, "0")
+        XCTAssertFalse(OtpCopy.placeholder.contains(where: \.isNumber))
+        XCTAssertEqual(OtpDigitText.display(""), OtpDigitText.emptyMarker)
+        XCTAssertNotEqual(OtpDigitText.display(""), "0")
+        XCTAssertNotEqual(OtpDigitText.display(""), OtpCopy.placeholder)
+        XCTAssertFalse(OtpDigitText.emptyMarker.isEmpty)
+        XCTAssertFalse(OtpDigitText.emptyMarker.contains(where: \.isNumber))
+        XCTAssertEqual(OtpDigitText.display("0"), "0")
+        XCTAssertEqual(OtpDigitText.cleaned("\u{200B}482913"), "482913")
+        XCTAssertEqual(OtpDigitText.cleaned("\u{200B}"), "")
+    }
+
+    func testSubmitStaysDisabledUntilEveryBoxHasADigit() {
+        var state = OtpState.initial
+        XCTAssertFalse(state.canSubmit)
+        for (index, character) in "12345".enumerated() {
+            state = OtpReducer.reduce(state, .input(index: index, text: String(character)))
+            XCTAssertFalse(state.canSubmit)
+            XCTAssertEqual(OtpReducer.reduce(state, .submit), state)
+        }
+        state = OtpReducer.reduce(state, .input(index: 5, text: "6"))
+        XCTAssertTrue(state.canSubmit)
+        XCTAssertEqual(state.code, "123456")
+    }
+
+    func testAClearedBoxDisablesSubmitAgain() {
+        var state = filled("123456")
+        XCTAssertTrue(state.canSubmit)
+        state = OtpReducer.reduce(state, .backspace(index: 3))
+        XCTAssertEqual(state.digits[3], "")
+        XCTAssertFalse(state.canSubmit)
+        XCTAssertEqual(OtpReducer.reduce(state, .submit), state)
+    }
+
+    func testPasteSentenceFillsAllSixBoxesFromAnyIndex() {
+        for index in 0..<OtpState.length {
+            let state = OtpReducer.reduce(.initial, .input(index: index, text: "Your code is 482913"))
+            XCTAssertEqual(state.digits, ["4", "8", "2", "9", "1", "3"])
+            XCTAssertEqual(state.focusedIndex, 5)
+            XCTAssertTrue(state.canSubmit)
+        }
+    }
+
+    func testOnlyAsciiDigitsAreAccepted() {
+        XCTAssertEqual(OtpReducer.reduce(.initial, .input(index: 0, text: "٠")), .initial)
+        XCTAssertEqual(OtpReducer.reduce(.initial, .input(index: 0, text: "５")), .initial)
+        XCTAssertEqual(OtpReducer.reduce(.initial, .input(index: 0, text: "no digits")), .initial)
+        let mixed = OtpReducer.reduce(.initial, .input(index: 1, text: "4a8b2913"))
+        XCTAssertEqual(mixed.code, "482913")
+    }
+
+    func testZeroFilledCodeIsARealAttemptAndFails() {
+        let ready = filled("000000", secondsRemaining: 9)
+        XCTAssertTrue(ready.canSubmit)
+        XCTAssertEqual(ready.digits, Array(repeating: "0", count: 6))
+        let submitted = OtpReducer.reduce(ready, .submit)
+        XCTAssertEqual(submitted.statusMessage, "That code didn't work. Try again.")
+        XCTAssertEqual(submitted.digits, Array(repeating: "", count: 6))
+        XCTAssertEqual(submitted.focusedIndex, 0)
+        XCTAssertEqual(submitted.secondsRemaining, 9)
+        XCTAssertFalse(submitted.canSubmit)
+    }
+
+    func testOtherWrongCodesResetTheSameWay() {
+        for code in ["123455", "654321", "111111"] {
+            let submitted = OtpReducer.reduce(filled(code, secondsRemaining: 4), .submit)
+            XCTAssertEqual(submitted.status, .error)
+            XCTAssertEqual(submitted.statusMessage, OtpCopy.failure)
+            XCTAssertEqual(submitted.digits, ["", "", "", "", "", ""])
+            XCTAssertEqual(submitted.focusedIndex, 0)
+            XCTAssertEqual(submitted.secondsRemaining, 4)
+        }
+    }
+
+    func testBackspaceOnEmptyBoxesWalksBackToTheStart() {
+        var state = OtpState.initial
+        for (index, character) in "215".enumerated() {
+            state = OtpReducer.reduce(state, .input(index: index, text: String(character)))
+        }
+        XCTAssertEqual(state.digits, ["2", "1", "5", "", "", ""])
+        XCTAssertEqual(state.focusedIndex, 3)
+        state = OtpReducer.reduce(state, .backspace(index: 3))
+        XCTAssertEqual(state.digits, ["2", "1", "", "", "", ""])
+        XCTAssertEqual(state.focusedIndex, 2)
+        state = OtpReducer.reduce(state, .backspace(index: 2))
+        XCTAssertEqual(state.digits, ["2", "", "", "", "", ""])
+        XCTAssertEqual(state.focusedIndex, 1)
+        state = OtpReducer.reduce(state, .backspace(index: 1))
+        XCTAssertEqual(state.digits, ["", "", "", "", "", ""])
+        XCTAssertEqual(state.focusedIndex, 0)
+        XCTAssertEqual(OtpReducer.reduce(state, .backspace(index: 0)), state)
+    }
+
+    func testResendRestartsTheCountdownWithoutClearingDigits() {
+        let blocked = OtpState(
+            digits: ["2", "1", "5", "", "", ""],
+            focusedIndex: 3,
+            status: .idle,
+            secondsRemaining: 12
+        )
+        let ignored = OtpReducer.reduce(blocked, .resend)
+        XCTAssertEqual(ignored, blocked)
+        var open = blocked
+        open.secondsRemaining = 0
+        open.status = .error
+        let restarted = OtpReducer.reduce(open, .resend)
+        XCTAssertEqual(restarted.secondsRemaining, 30)
+        XCTAssertEqual(restarted.digits, open.digits)
+        XCTAssertEqual(restarted.status, .error)
+        XCTAssertEqual(restarted.resendLabel, "Resend in 0:30")
+        XCTAssertFalse(restarted.canResend)
+    }
+
+    func testReplacingADigitAdvancesFromThatBox() {
+        var state = OtpReducer.reduce(.initial, .input(index: 0, text: "9"))
+        state = OtpReducer.reduce(state, .input(index: 0, text: "2"))
+        XCTAssertEqual(state.digits[0], "2")
+        XCTAssertEqual(state.focusedIndex, 1)
+    }
+
+    func testStoreAppliesDigitsAndTicksWithoutAClock() {
+        let store = OtpStore(startClock: false)
+        store.send(.input(index: 0, text: "0"))
+        XCTAssertEqual(store.state.digits, ["0", "", "", "", "", ""])
+        XCTAssertEqual(store.state.secondsRemaining, 30)
+        XCTAssertEqual(store.state.resendLabel, "Resend in 0:30")
+        XCTAssertFalse(store.state.canSubmit)
+        store.send(.tick)
+        XCTAssertEqual(store.state.secondsRemaining, 29)
+        XCTAssertEqual(store.state.resendLabel, "Resend in 0:29")
+        store.send(.input(index: 0, text: "a"))
+        XCTAssertEqual(store.state.digits[0], "0")
+    }
+
+    func testCopyFollowsTheIssueListRatherThanTheReferenceImage() {
+        XCTAssertEqual(OtpCopy.title, "Enter your code")
+        XCTAssertNotEqual(OtpCopy.title, "Enter Your code")
+        XCTAssertEqual(OtpCopy.subtitle, "A 6-digit code has been sent to your phone.")
+        XCTAssertFalse(OtpCopy.subtitle.lowercased().contains("cell phone"))
+        XCTAssertEqual(OtpCopy.resendIdle, "Didn't receive the code? Resend")
+        XCTAssertFalse(OtpCopy.resendIdle.hasSuffix("Resend."))
+        XCTAssertEqual(OtpCopy.success, "You're in.")
+        XCTAssertEqual(OtpCopy.failure, "That code didn't work. Try again.")
+        XCTAssertNotEqual(OtpCopy.placeholder, "0")
+    }
+
     private func filled(_ code: String, secondsRemaining: Int = 30) -> OtpState {
         OtpState(
             digits: code.map { String($0) },
@@ -211,10 +386,19 @@ final class OtpPaletteTests: XCTestCase {
         XCTAssertEqual(file.otp.light.digitFocusedOutline, "#111111")
         XCTAssertEqual(file.otp.light.digitEmptyBackground, "#F1F1F1")
         XCTAssertEqual(file.otp.light.digitPlaceholder, "#9E9E9E")
+        XCTAssertEqual(file.otp.light.buttonBackground, "#12361B")
         XCTAssertEqual(file.otp.light.buttonDisabledBackground, "#C9D1CB")
+        XCTAssertNotEqual(file.otp.light.buttonBackground, file.otp.light.buttonDisabledBackground)
+        XCTAssertNotEqual(file.otp.light.digitFilledBackground, file.otp.light.digitEmptyBackground)
+        XCTAssertNotEqual(file.otp.light.digitFilledBackground, file.otp.light.digitFocusedBackground)
         XCTAssertEqual(file.otp.dark.sheet, "#161A17")
         XCTAssertEqual(file.otp.dark.digitFilledBackground, "#2E7D45")
+        XCTAssertEqual(file.otp.dark.digitFilledText, "#FFFFFF")
         XCTAssertEqual(file.otp.dark.link, "#7BC795")
+        XCTAssertNotEqual(file.otp.light.sheet, file.otp.dark.sheet)
+        XCTAssertNotEqual(file.otp.light.textPrimary, file.otp.dark.textPrimary)
+        XCTAssertNotEqual(file.otp.light.digitEmptyBackground, file.otp.dark.digitEmptyBackground)
+        XCTAssertNotEqual(file.otp.light.digitFilledBackground, file.otp.dark.digitFilledBackground)
 
         _ = try OtpPalette.decode(data, scheme: .light)
         _ = try OtpPalette.decode(data, scheme: .dark)
