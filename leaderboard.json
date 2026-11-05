@@ -126,6 +126,24 @@
     "stack": "flutter"
   },
   {
+    "team": "aymanissa-dev",
+    "score": 25,
+    "breakdown": {
+      "ac": 10,
+      "visual": 6,
+      "code": 4,
+      "build": 2,
+      "tests": 2,
+      "prompt": 1
+    },
+    "graded_at": "2026-11-05T08:43:47Z",
+    "flags": [],
+    "status": "scored",
+    "pr": 16,
+    "updated_at": "2026-11-05T08:43:47Z",
+    "stack": "react-native"
+  },
+  {
     "team": "josendungu",
     "score": 24,
     "breakdown": {
@@ -290,17 +308,6 @@
     "pr": 17,
     "updated_at": "2026-11-05T08:32:12Z",
     "stack": "unknown"
-  },
-  {
-    "team": "aymanissa-dev",
-    "score": null,
-    "breakdown": null,
-    "graded_at": null,
-    "flags": [],
-    "status": "grading",
-    "pr": 16,
-    "updated_at": "2026-11-05T08:43:28Z",
-    "stack": "react-native"
   },
   {
     "team": "kkmurerwa",
