@@ -342,6 +342,24 @@
     "stack": "flutter"
   },
   {
+    "team": "brian-mwangi",
+    "score": 25,
+    "breakdown": {
+      "ac": 10,
+      "visual": 6,
+      "code": 4,
+      "build": 2,
+      "tests": 2,
+      "prompt": 1
+    },
+    "graded_at": "2026-11-05T13:02:18Z",
+    "flags": [],
+    "status": "scored",
+    "pr": 17,
+    "updated_at": "2026-11-05T13:02:18Z",
+    "stack": "android"
+  },
+  {
     "team": "josendungu",
     "score": 24,
     "breakdown": {
@@ -429,24 +447,6 @@
     "status": "scored",
     "pr": 9,
     "updated_at": "2026-11-05T09:44:35Z",
-    "stack": "android"
-  },
-  {
-    "team": "brian-mwangi",
-    "score": 24,
-    "breakdown": {
-      "ac": 10,
-      "visual": 6,
-      "code": 4,
-      "build": 2,
-      "tests": 2,
-      "prompt": 0
-    },
-    "graded_at": "2026-11-05T12:41:36Z",
-    "flags": [],
-    "status": "grading",
-    "pr": 17,
-    "updated_at": "2026-11-05T13:01:52Z",
     "stack": "android"
   },
   {
