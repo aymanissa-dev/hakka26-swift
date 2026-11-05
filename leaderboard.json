@@ -345,9 +345,10 @@
     "breakdown": null,
     "graded_at": null,
     "flags": [],
-    "status": "building",
+    "status": "grading",
     "pr": 20,
-    "updated_at": "2026-11-05T08:48:10Z"
+    "updated_at": "2026-11-05T08:49:54Z",
+    "stack": "android"
   },
   {
     "team": "ted",
