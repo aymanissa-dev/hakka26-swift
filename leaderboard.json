@@ -256,6 +256,24 @@
     "stack": "unknown"
   },
   {
+    "team": "brian-mwangi",
+    "score": 0,
+    "breakdown": {
+      "ac": 0,
+      "visual": 0,
+      "code": 0,
+      "build": 0,
+      "tests": 0,
+      "prompt": 0
+    },
+    "graded_at": "2026-11-05T08:32:12Z",
+    "flags": [],
+    "status": "invalid",
+    "pr": 17,
+    "updated_at": "2026-11-05T08:32:12Z",
+    "stack": "unknown"
+  },
+  {
     "team": "aymanissa-dev",
     "score": null,
     "breakdown": null,
@@ -264,16 +282,6 @@
     "status": "building",
     "pr": 16,
     "updated_at": "2026-11-05T08:31:15Z"
-  },
-  {
-    "team": "brian-mwangi",
-    "score": null,
-    "breakdown": null,
-    "graded_at": null,
-    "flags": [],
-    "status": "building",
-    "pr": 17,
-    "updated_at": "2026-11-05T08:31:42Z"
   },
   {
     "team": "kkmurerwa",
