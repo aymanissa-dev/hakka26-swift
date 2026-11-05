@@ -324,6 +324,24 @@
     "stack": "flutter"
   },
   {
+    "team": "byona",
+    "score": 25,
+    "breakdown": {
+      "ac": 10,
+      "visual": 6,
+      "code": 4,
+      "build": 2,
+      "tests": 2,
+      "prompt": 1
+    },
+    "graded_at": "2026-11-05T12:06:46Z",
+    "flags": [],
+    "status": "scored",
+    "pr": 30,
+    "updated_at": "2026-11-05T12:06:46Z",
+    "stack": "flutter"
+  },
+  {
     "team": "josendungu",
     "score": 24,
     "breakdown": {
@@ -522,17 +540,6 @@
     "pr": 26,
     "updated_at": "2026-11-05T09:51:00Z",
     "stack": "unknown"
-  },
-  {
-    "team": "byona",
-    "score": null,
-    "breakdown": null,
-    "graded_at": null,
-    "flags": [],
-    "status": "grading",
-    "pr": 30,
-    "updated_at": "2026-11-05T12:06:30Z",
-    "stack": "flutter"
   },
   {
     "team": "kkmurerwa",
