@@ -506,24 +506,6 @@
     "stack": "unknown"
   },
   {
-    "team": "netstate",
-    "score": 0,
-    "breakdown": {
-      "ac": 0,
-      "visual": 0,
-      "code": 0,
-      "build": 0,
-      "tests": 0,
-      "prompt": 0
-    },
-    "graded_at": "2026-11-05T09:30:35Z",
-    "flags": [],
-    "status": "building",
-    "pr": 31,
-    "updated_at": "2026-11-05T12:35:27Z",
-    "stack": "unknown"
-  },
-  {
     "team": "pr-26",
     "score": 0,
     "breakdown": {
@@ -539,6 +521,24 @@
     "status": "invalid",
     "pr": 26,
     "updated_at": "2026-11-05T09:51:00Z",
+    "stack": "unknown"
+  },
+  {
+    "team": "netstate",
+    "score": 0,
+    "breakdown": {
+      "ac": 0,
+      "visual": 0,
+      "code": 0,
+      "build": 0,
+      "tests": 0,
+      "prompt": 0
+    },
+    "graded_at": "2026-11-05T12:35:49Z",
+    "flags": [],
+    "status": "invalid",
+    "pr": 31,
+    "updated_at": "2026-11-05T12:35:49Z",
     "stack": "unknown"
   },
   {
