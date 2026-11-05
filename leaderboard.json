@@ -108,6 +108,24 @@
     "stack": "flutter"
   },
   {
+    "team": "joseph-watunu",
+    "score": 25,
+    "breakdown": {
+      "ac": 10,
+      "visual": 6,
+      "code": 4,
+      "build": 2,
+      "tests": 2,
+      "prompt": 1
+    },
+    "graded_at": "2026-11-05T08:41:44Z",
+    "flags": [],
+    "status": "scored",
+    "pr": 18,
+    "updated_at": "2026-11-05T08:41:44Z",
+    "stack": "flutter"
+  },
+  {
     "team": "josendungu",
     "score": 24,
     "breakdown": {
@@ -282,17 +300,6 @@
     "status": "building",
     "pr": 16,
     "updated_at": "2026-11-05T08:33:54Z"
-  },
-  {
-    "team": "joseph-watunu",
-    "score": null,
-    "breakdown": null,
-    "graded_at": null,
-    "flags": [],
-    "status": "grading",
-    "pr": 18,
-    "updated_at": "2026-11-05T08:41:25Z",
-    "stack": "flutter"
   },
   {
     "team": "kkmurerwa",
