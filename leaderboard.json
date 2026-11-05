@@ -36,6 +36,24 @@
     "stack": "android"
   },
   {
+    "team": "horace",
+    "score": 25,
+    "breakdown": {
+      "ac": 10,
+      "visual": 6,
+      "code": 4,
+      "build": 2,
+      "tests": 2,
+      "prompt": 1
+    },
+    "graded_at": "2026-11-05T08:24:47Z",
+    "flags": [],
+    "status": "scored",
+    "pr": 15,
+    "updated_at": "2026-11-05T08:24:47Z",
+    "stack": "kmp"
+  },
+  {
     "team": "josendungu",
     "score": 24,
     "breakdown": {
@@ -236,17 +254,6 @@
     "pr": 2,
     "updated_at": "2026-11-05T08:17:03Z",
     "stack": "unknown"
-  },
-  {
-    "team": "horace",
-    "score": null,
-    "breakdown": null,
-    "graded_at": null,
-    "flags": [],
-    "status": "grading",
-    "pr": 15,
-    "updated_at": "2026-11-05T08:24:26Z",
-    "stack": "kmp"
   },
   {
     "team": "kkmurerwa",
