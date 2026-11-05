@@ -366,24 +366,6 @@
     "stack": "unknown"
   },
   {
-    "team": "netstate",
-    "score": 0,
-    "breakdown": {
-      "ac": 0,
-      "visual": 0,
-      "code": 0,
-      "build": 0,
-      "tests": 0,
-      "prompt": 0
-    },
-    "graded_at": "2026-11-05T08:17:03Z",
-    "flags": [],
-    "status": "building",
-    "pr": 25,
-    "updated_at": "2026-11-05T09:20:13Z",
-    "stack": "unknown"
-  },
-  {
     "team": "brian-mwangi",
     "score": 0,
     "breakdown": {
@@ -399,6 +381,24 @@
     "status": "invalid",
     "pr": 17,
     "updated_at": "2026-11-05T08:32:12Z",
+    "stack": "unknown"
+  },
+  {
+    "team": "netstate",
+    "score": 0,
+    "breakdown": {
+      "ac": 0,
+      "visual": 0,
+      "code": 0,
+      "build": 0,
+      "tests": 0,
+      "prompt": 0
+    },
+    "graded_at": "2026-11-05T09:20:42Z",
+    "flags": [],
+    "status": "invalid",
+    "pr": 25,
+    "updated_at": "2026-11-05T09:20:42Z",
     "stack": "unknown"
   },
   {
