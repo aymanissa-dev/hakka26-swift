@@ -270,6 +270,24 @@
     "stack": "android"
   },
   {
+    "team": "malhare",
+    "score": 23,
+    "breakdown": {
+      "ac": 10,
+      "visual": 6,
+      "code": 3,
+      "build": 2,
+      "tests": 2,
+      "prompt": 0
+    },
+    "graded_at": "2026-11-05T09:25:18Z",
+    "flags": [],
+    "status": "scored",
+    "pr": 24,
+    "updated_at": "2026-11-05T09:25:18Z",
+    "stack": "flutter"
+  },
+  {
     "team": "wallace-ai",
     "score": 20,
     "breakdown": {
@@ -410,17 +428,6 @@
     "status": "building",
     "pr": 4,
     "updated_at": "2026-11-05T07:49:20Z"
-  },
-  {
-    "team": "malhare",
-    "score": null,
-    "breakdown": null,
-    "graded_at": null,
-    "flags": [],
-    "status": "grading",
-    "pr": 24,
-    "updated_at": "2026-11-05T09:25:00Z",
-    "stack": "flutter"
   },
   {
     "team": "team",
