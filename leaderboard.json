@@ -360,9 +360,9 @@
     "flags": [
       "other"
     ],
-    "status": "build_failed",
+    "status": "building",
     "pr": 27,
-    "updated_at": "2026-11-05T09:32:00Z",
+    "updated_at": "2026-11-05T09:35:25Z",
     "stack": "flutter"
   },
   {
