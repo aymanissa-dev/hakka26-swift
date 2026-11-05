@@ -371,9 +371,10 @@
     "breakdown": null,
     "graded_at": null,
     "flags": [],
-    "status": "building",
+    "status": "grading",
     "pr": 22,
-    "updated_at": "2026-11-05T09:01:28Z"
+    "updated_at": "2026-11-05T09:04:56Z",
+    "stack": "android"
   },
   {
     "team": "kkmurerwa",
