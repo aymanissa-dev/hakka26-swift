@@ -218,6 +218,16 @@
     "stack": "unknown"
   },
   {
+    "team": "horace",
+    "score": null,
+    "breakdown": null,
+    "graded_at": null,
+    "flags": [],
+    "status": "building",
+    "pr": 15,
+    "updated_at": "2026-11-05T08:20:36Z"
+  },
+  {
     "team": "kaimumutz",
     "score": null,
     "breakdown": null,
