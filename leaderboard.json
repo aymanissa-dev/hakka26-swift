@@ -458,6 +458,24 @@
     "stack": "unknown"
   },
   {
+    "team": "pr-26",
+    "score": 0,
+    "breakdown": {
+      "ac": 0,
+      "visual": 0,
+      "code": 0,
+      "build": 0,
+      "tests": 0,
+      "prompt": 0
+    },
+    "graded_at": "2026-11-05T09:39:12Z",
+    "flags": [],
+    "status": "invalid",
+    "pr": 26,
+    "updated_at": "2026-11-05T09:39:12Z",
+    "stack": "unknown"
+  },
+  {
     "team": "hakka-collins",
     "score": null,
     "breakdown": null,
@@ -476,15 +494,5 @@
     "status": "building",
     "pr": 4,
     "updated_at": "2026-11-05T07:49:20Z"
-  },
-  {
-    "team": "pr-26",
-    "score": null,
-    "breakdown": null,
-    "graded_at": null,
-    "flags": [],
-    "status": "building",
-    "pr": 26,
-    "updated_at": "2026-11-05T09:38:40Z"
   }
 ]
