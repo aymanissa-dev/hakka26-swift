@@ -162,6 +162,24 @@
     "stack": "android"
   },
   {
+    "team": "ted",
+    "score": 25,
+    "breakdown": {
+      "ac": 10,
+      "visual": 6,
+      "code": 4,
+      "build": 2,
+      "tests": 2,
+      "prompt": 1
+    },
+    "graded_at": "2026-11-05T08:53:00Z",
+    "flags": [],
+    "status": "scored",
+    "pr": 21,
+    "updated_at": "2026-11-05T08:53:00Z",
+    "stack": "android"
+  },
+  {
     "team": "josendungu",
     "score": 24,
     "breakdown": {
@@ -356,16 +374,5 @@
     "status": "building",
     "pr": 4,
     "updated_at": "2026-11-05T07:49:20Z"
-  },
-  {
-    "team": "ted",
-    "score": null,
-    "breakdown": null,
-    "graded_at": null,
-    "flags": [],
-    "status": "grading",
-    "pr": 21,
-    "updated_at": "2026-11-05T08:52:37Z",
-    "stack": "android"
   }
 ]
