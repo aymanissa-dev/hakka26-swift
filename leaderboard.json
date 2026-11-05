@@ -336,9 +336,9 @@
     },
     "graded_at": "2026-11-05T09:25:18Z",
     "flags": [],
-    "status": "building",
+    "status": "grading",
     "pr": 24,
-    "updated_at": "2026-11-05T09:39:35Z",
+    "updated_at": "2026-11-05T09:43:00Z",
     "stack": "flutter"
   },
   {
