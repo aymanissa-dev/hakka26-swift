@@ -243,9 +243,10 @@
     "breakdown": null,
     "graded_at": null,
     "flags": [],
-    "status": "building",
+    "status": "grading",
     "pr": 15,
-    "updated_at": "2026-11-05T08:20:36Z"
+    "updated_at": "2026-11-05T08:24:26Z",
+    "stack": "kmp"
   },
   {
     "team": "kkmurerwa",
