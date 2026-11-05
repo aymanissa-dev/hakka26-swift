@@ -500,10 +500,10 @@
     },
     "graded_at": "2026-11-05T08:32:12Z",
     "flags": [],
-    "status": "building",
+    "status": "grading",
     "pr": 17,
-    "updated_at": "2026-11-05T12:38:14Z",
-    "stack": "unknown"
+    "updated_at": "2026-11-05T12:41:11Z",
+    "stack": "android"
   },
   {
     "team": "pr-26",
