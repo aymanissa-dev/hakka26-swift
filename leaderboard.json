@@ -534,11 +534,11 @@
       "tests": 0,
       "prompt": 0
     },
-    "graded_at": "2026-11-05T12:35:49Z",
+    "graded_at": "2026-11-05T13:16:19Z",
     "flags": [],
-    "status": "building",
+    "status": "invalid",
     "pr": 31,
-    "updated_at": "2026-11-05T13:15:47Z",
+    "updated_at": "2026-11-05T13:16:19Z",
     "stack": "unknown"
   },
   {
