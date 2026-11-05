@@ -19,9 +19,26 @@ struct OtpPalette: Equatable {
     let success: Color
     let error: Color
 
+    private static let mainColourBytes: Data? = colourBytes(in: .main)
+    private static let cachedLight = palette(from: mainColourBytes, scheme: .light)
+    private static let cachedDark = palette(from: mainColourBytes, scheme: .dark)
+
     static func load(scheme: ColorScheme, bundle: Bundle = .main) -> OtpPalette {
-        if let url = bundle.url(forResource: "colours", withExtension: "json"),
-           let data = try? Data(contentsOf: url),
+        if bundle === Bundle.main {
+            return scheme == .dark ? cachedDark : cachedLight
+        }
+        return palette(from: colourBytes(in: bundle), scheme: scheme)
+    }
+
+    private static func colourBytes(in bundle: Bundle) -> Data? {
+        guard let url = bundle.url(forResource: "colours", withExtension: "json") else {
+            return nil
+        }
+        return try? Data(contentsOf: url)
+    }
+
+    private static func palette(from data: Data?, scheme: ColorScheme) -> OtpPalette {
+        if let data = data,
            let palette = try? decode(data, scheme: scheme) {
             return palette
         }
