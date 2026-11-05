@@ -414,9 +414,9 @@
     "flags": [
       "prompt_code_mismatch"
     ],
-    "status": "building",
+    "status": "grading",
     "pr": 9,
-    "updated_at": "2026-11-05T09:41:52Z",
+    "updated_at": "2026-11-05T09:44:15Z",
     "stack": "android"
   },
   {
