@@ -348,5 +348,15 @@
     "status": "building",
     "pr": 20,
     "updated_at": "2026-11-05T08:48:10Z"
+  },
+  {
+    "team": "ted",
+    "score": null,
+    "breakdown": null,
+    "graded_at": null,
+    "flags": [],
+    "status": "building",
+    "pr": 21,
+    "updated_at": "2026-11-05T08:49:01Z"
   }
 ]
