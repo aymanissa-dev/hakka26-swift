@@ -90,6 +90,24 @@
     "stack": "react-native"
   },
   {
+    "team": "dsvishchov",
+    "score": 25,
+    "breakdown": {
+      "ac": 10,
+      "visual": 6,
+      "code": 4,
+      "build": 2,
+      "tests": 2,
+      "prompt": 1
+    },
+    "graded_at": "2026-11-05T08:39:58Z",
+    "flags": [],
+    "status": "scored",
+    "pr": 12,
+    "updated_at": "2026-11-05T08:39:58Z",
+    "stack": "flutter"
+  },
+  {
     "team": "josendungu",
     "score": 24,
     "breakdown": {
@@ -142,24 +160,6 @@
     "pr": 11,
     "updated_at": "2026-11-05T08:06:47Z",
     "stack": "android"
-  },
-  {
-    "team": "dsvishchov",
-    "score": 22,
-    "breakdown": {
-      "ac": 10,
-      "visual": 6,
-      "code": 3,
-      "build": 2,
-      "tests": 0,
-      "prompt": 1
-    },
-    "graded_at": "2026-11-05T08:17:32Z",
-    "flags": [],
-    "status": "grading",
-    "pr": 12,
-    "updated_at": "2026-11-05T08:39:39Z",
-    "stack": "flutter"
   },
   {
     "team": "kaimumutz",
