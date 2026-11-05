@@ -234,6 +234,24 @@
     "stack": "android"
   },
   {
+    "team": "jeremy-gitau",
+    "score": 24,
+    "breakdown": {
+      "ac": 10,
+      "visual": 5,
+      "code": 4,
+      "build": 2,
+      "tests": 2,
+      "prompt": 1
+    },
+    "graded_at": "2026-11-05T09:05:18Z",
+    "flags": [],
+    "status": "scored",
+    "pr": 22,
+    "updated_at": "2026-11-05T09:05:18Z",
+    "stack": "android"
+  },
+  {
     "team": "wallace-ai",
     "score": 20,
     "breakdown": {
@@ -364,17 +382,6 @@
     "pr": 17,
     "updated_at": "2026-11-05T08:32:12Z",
     "stack": "unknown"
-  },
-  {
-    "team": "jeremy-gitau",
-    "score": null,
-    "breakdown": null,
-    "graded_at": null,
-    "flags": [],
-    "status": "grading",
-    "pr": 22,
-    "updated_at": "2026-11-05T09:04:56Z",
-    "stack": "android"
   },
   {
     "team": "kkmurerwa",
