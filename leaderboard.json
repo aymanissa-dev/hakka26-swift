@@ -346,6 +346,26 @@
     "stack": "android"
   },
   {
+    "team": "brian1011",
+    "score": 17,
+    "breakdown": {
+      "ac": 5,
+      "visual": 6,
+      "code": 3,
+      "build": 0,
+      "tests": 2,
+      "prompt": 1
+    },
+    "graded_at": "2026-11-05T09:32:00Z",
+    "flags": [
+      "other"
+    ],
+    "status": "build_failed",
+    "pr": 27,
+    "updated_at": "2026-11-05T09:32:00Z",
+    "stack": "flutter"
+  },
+  {
     "team": "mambo",
     "score": 15,
     "breakdown": {
@@ -436,17 +456,6 @@
     "pr": 25,
     "updated_at": "2026-11-05T09:30:35Z",
     "stack": "unknown"
-  },
-  {
-    "team": "brian1011",
-    "score": null,
-    "breakdown": null,
-    "graded_at": null,
-    "flags": [],
-    "status": "grading",
-    "pr": 27,
-    "updated_at": "2026-11-05T09:31:36Z",
-    "stack": "flutter"
   },
   {
     "team": "kkmurerwa",
