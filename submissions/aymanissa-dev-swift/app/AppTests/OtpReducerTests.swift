@@ -350,6 +350,202 @@ final class OtpReducerTests: XCTestCase {
         XCTAssertNotEqual(OtpCopy.placeholder, "0")
     }
 
+    func testNonDigitPasteLeavesTheEntryUntouched() {
+        let partial = OtpState(
+            digits: ["4", "8", "", "", "", ""],
+            focusedIndex: 2,
+            status: .idle,
+            secondsRemaining: 17
+        )
+        let fullwidthDigits = "\u{FF11}\u{FF12}\u{FF13}\u{FF14}\u{FF15}\u{FF16}"
+        let vulgarAndSuperscript = "\u{00BD}\u{00B2}"
+        for text in [" \n\t ", "abc", fullwidthDigits, vulgarAndSuperscript, "\u{200B}"] {
+            XCTAssertEqual(OtpReducer.reduce(partial, .input(index: 2, text: text)), partial, text)
+        }
+    }
+
+    func testEmptyInputClearsLikeBackspace() {
+        let partial = OtpState(
+            digits: ["4", "8", "", "", "", ""],
+            focusedIndex: 2,
+            status: .idle,
+            secondsRemaining: 17
+        )
+        let cleared = OtpReducer.reduce(partial, .input(index: 2, text: ""))
+        XCTAssertEqual(cleared.digits, ["4", "", "", "", "", ""])
+        XCTAssertEqual(cleared.focusedIndex, 1)
+        XCTAssertEqual(cleared.status, .idle)
+        XCTAssertEqual(cleared.secondsRemaining, 17)
+    }
+
+    func testShortPasteKeepsDigitsOutsideTheWrittenRun() {
+        let entered = filled("123456", secondsRemaining: 14)
+
+        let middle = OtpReducer.reduce(entered, .input(index: 1, text: "87"))
+        XCTAssertEqual(middle.digits, ["1", "8", "7", "4", "5", "6"])
+        XCTAssertEqual(middle.focusedIndex, 3)
+        XCTAssertEqual(middle.secondsRemaining, 14)
+        XCTAssertTrue(middle.canSubmit)
+
+        let narrowed = OtpReducer.reduce(entered, .input(index: 0, text: "\u{FF14}8\u{FF12}913"))
+        XCTAssertEqual(narrowed.digits, ["8", "9", "1", "3", "5", "6"])
+        XCTAssertEqual(narrowed.focusedIndex, 4)
+        XCTAssertEqual(narrowed.secondsRemaining, 14)
+        XCTAssertTrue(narrowed.canSubmit)
+
+        let tail = OtpReducer.reduce(entered, .input(index: 4, text: "987"))
+        XCTAssertEqual(tail.digits, ["1", "2", "3", "4", "9", "8"])
+        XCTAssertEqual(tail.focusedIndex, 5)
+        XCTAssertEqual(tail.code, "123498")
+        XCTAssertEqual(tail.secondsRemaining, 14)
+        XCTAssertTrue(tail.canSubmit)
+    }
+
+    func testPastingSixDigitsReplacesACodeThatIsAlreadyFull() {
+        let entered = filled("999999", secondsRemaining: 16)
+        let pasted = OtpReducer.reduce(entered, .input(index: 4, text: "Your code is 482913"))
+        XCTAssertEqual(pasted.digits, ["4", "8", "2", "9", "1", "3"])
+        XCTAssertEqual(pasted.focusedIndex, 5)
+        XCTAssertEqual(pasted.status, .idle)
+        XCTAssertEqual(pasted.secondsRemaining, 16)
+        XCTAssertTrue(pasted.canSubmit)
+    }
+
+    func testEditingDoesNotResetTheCountdown() {
+        var state = filled("123456", secondsRemaining: 12)
+        state = OtpReducer.reduce(state, .input(index: 5, text: "0"))
+        XCTAssertEqual(state.code, "123450")
+        XCTAssertEqual(state.focusedIndex, 5)
+        XCTAssertTrue(state.canSubmit)
+        XCTAssertEqual(state.secondsRemaining, 12)
+
+        state = OtpReducer.reduce(state, .backspace(index: 5))
+        XCTAssertEqual(state.code, "12345")
+        XCTAssertEqual(state.focusedIndex, 5)
+        XCTAssertFalse(state.canSubmit)
+        XCTAssertEqual(state.secondsRemaining, 12)
+
+        state = OtpReducer.reduce(state, .focus(2))
+        XCTAssertEqual(state.focusedIndex, 2)
+        XCTAssertEqual(state.digits, ["1", "2", "3", "4", "5", ""])
+        XCTAssertEqual(state.secondsRemaining, 12)
+        XCTAssertEqual(state.resendLabel, "Resend in 0:12")
+        XCTAssertFalse(state.canResend)
+    }
+
+    func testEditingAfterSuccessReturnsToIdle() {
+        let success = OtpReducer.reduce(filled("123456", secondsRemaining: 21), .submit)
+        XCTAssertEqual(success.status, .success)
+        XCTAssertTrue(success.canSubmit)
+        XCTAssertEqual(OtpReducer.reduce(success, .submit), success)
+
+        let typed = OtpReducer.reduce(success, .input(index: 0, text: "9"))
+        XCTAssertEqual(typed.digits, ["9", "2", "3", "4", "5", "6"])
+        XCTAssertEqual(typed.focusedIndex, 1)
+        XCTAssertEqual(typed.status, .idle)
+        XCTAssertEqual(typed.statusMessage, "")
+        XCTAssertEqual(typed.secondsRemaining, 21)
+        XCTAssertTrue(typed.canSubmit)
+
+        let cleared = OtpReducer.reduce(success, .backspace(index: 5))
+        XCTAssertEqual(cleared.digits, ["1", "2", "3", "4", "5", ""])
+        XCTAssertEqual(cleared.focusedIndex, 5)
+        XCTAssertEqual(cleared.status, .idle)
+        XCTAssertEqual(cleared.statusMessage, "")
+        XCTAssertFalse(cleared.canSubmit)
+        XCTAssertEqual(cleared.secondsRemaining, 21)
+    }
+
+    func testResendAfterSuccessRestartsTheCountdownAndKeepsTheMessage() {
+        let success = OtpReducer.reduce(filled("123456", secondsRemaining: 0), .submit)
+        XCTAssertEqual(success.status, .success)
+        XCTAssertEqual(success.statusMessage, "You're in.")
+        XCTAssertTrue(success.canResend)
+
+        let restarted = OtpReducer.reduce(success, .resend)
+        XCTAssertEqual(restarted.secondsRemaining, 30)
+        XCTAssertEqual(restarted.status, .success)
+        XCTAssertEqual(restarted.statusMessage, "You're in.")
+        XCTAssertEqual(restarted.code, "123456")
+        XCTAssertFalse(restarted.canResend)
+        XCTAssertEqual(restarted.resendLabel, "Resend in 0:30")
+        XCTAssertEqual(OtpReducer.reduce(restarted, .resend), restarted)
+    }
+
+    func testPasteAfterAnErrorFillsTheBoxesAndClearsTheMessage() {
+        let failed = OtpReducer.reduce(filled("482913", secondsRemaining: 11), .submit)
+        XCTAssertEqual(failed.status, .error)
+        XCTAssertEqual(failed.digits, ["", "", "", "", "", ""])
+
+        let pasted = OtpReducer.reduce(failed, .input(index: 0, text: "Your code is 482913"))
+        XCTAssertEqual(pasted.digits, ["4", "8", "2", "9", "1", "3"])
+        XCTAssertEqual(pasted.focusedIndex, 5)
+        XCTAssertEqual(pasted.status, .idle)
+        XCTAssertEqual(pasted.statusMessage, "")
+        XCTAssertEqual(pasted.secondsRemaining, 11)
+        XCTAssertTrue(pasted.canSubmit)
+    }
+
+    func testSubmitAfterAnErrorIsIgnoredUntilTheCodeIsComplete() {
+        let failed = OtpReducer.reduce(filled("654321", secondsRemaining: 9), .submit)
+        XCTAssertEqual(failed.statusMessage, OtpCopy.failure)
+        XCTAssertEqual(OtpReducer.reduce(failed, .submit), failed)
+
+        let partial = OtpReducer.reduce(failed, .input(index: 0, text: "12345"))
+        XCTAssertEqual(partial.digits, ["1", "2", "3", "4", "5", ""])
+        XCTAssertEqual(partial.focusedIndex, 5)
+        XCTAssertEqual(partial.status, .idle)
+        XCTAssertEqual(partial.statusMessage, "")
+        XCTAssertEqual(partial.secondsRemaining, 9)
+        XCTAssertEqual(OtpReducer.reduce(partial, .submit), partial)
+
+        let ready = OtpReducer.reduce(partial, .input(index: 5, text: "6"))
+        let submitted = OtpReducer.reduce(ready, .submit)
+        XCTAssertEqual(submitted.status, .success)
+        XCTAssertEqual(submitted.code, "123456")
+        XCTAssertEqual(submitted.secondsRemaining, 9)
+    }
+
+    func testFailureStaysUntilTheEntryChanges() {
+        let failed = OtpReducer.reduce(filled("111111", secondsRemaining: 4), .submit)
+        XCTAssertEqual(OtpReducer.reduce(failed, .backspace(index: 0)), failed)
+
+        let focused = OtpReducer.reduce(failed, .focus(4))
+        XCTAssertEqual(focused.focusedIndex, 4)
+        XCTAssertEqual(focused.status, .error)
+        XCTAssertEqual(focused.statusMessage, OtpCopy.failure)
+        XCTAssertEqual(focused.digits, ["", "", "", "", "", ""])
+        XCTAssertEqual(focused.secondsRemaining, 4)
+
+        let moved = OtpReducer.reduce(focused, .backspace(index: 4))
+        XCTAssertEqual(moved.digits, ["", "", "", "", "", ""])
+        XCTAssertEqual(moved.focusedIndex, 3)
+        XCTAssertEqual(moved.status, .idle)
+        XCTAssertEqual(moved.statusMessage, "")
+        XCTAssertEqual(moved.secondsRemaining, 4)
+    }
+
+    func testTickKeepsTheFinishedAttempt() {
+        let success = OtpReducer.reduce(filled("123456", secondsRemaining: 10), .submit)
+        let tickedSuccess = OtpReducer.reduce(success, .tick)
+        XCTAssertEqual(tickedSuccess.secondsRemaining, 9)
+        XCTAssertEqual(tickedSuccess.status, .success)
+        XCTAssertEqual(tickedSuccess.statusMessage, "You're in.")
+        XCTAssertEqual(tickedSuccess.code, "123456")
+        XCTAssertTrue(tickedSuccess.canSubmit)
+        XCTAssertFalse(tickedSuccess.canResend)
+        XCTAssertEqual(tickedSuccess.resendLabel, "Resend in 0:09")
+
+        let failed = OtpReducer.reduce(filled("000000", secondsRemaining: 10), .submit)
+        let tickedError = OtpReducer.reduce(failed, .tick)
+        XCTAssertEqual(tickedError.secondsRemaining, 9)
+        XCTAssertEqual(tickedError.status, .error)
+        XCTAssertEqual(tickedError.statusMessage, OtpCopy.failure)
+        XCTAssertEqual(tickedError.digits, ["", "", "", "", "", ""])
+        XCTAssertEqual(tickedError.focusedIndex, 0)
+        XCTAssertEqual(tickedError.resendLabel, "Resend in 0:09")
+    }
+
     private func filled(_ code: String, secondsRemaining: Int = 30) -> OtpState {
         OtpState(
             digits: code.map { String($0) },
@@ -402,5 +598,34 @@ final class OtpPaletteTests: XCTestCase {
 
         _ = try OtpPalette.decode(data, scheme: .light)
         _ = try OtpPalette.decode(data, scheme: .dark)
+    }
+
+    func testLoadReturnsTheSameBundledPaletteForEachScheme() throws {
+        let url = try XCTUnwrap(Bundle.main.url(forResource: "colours", withExtension: "json"))
+        let data = try Data(contentsOf: url)
+        let light = OtpPalette.load(scheme: .light)
+        let dark = OtpPalette.load(scheme: .dark)
+        XCTAssertEqual(light, OtpPalette.load(scheme: .light))
+        XCTAssertEqual(dark, OtpPalette.load(scheme: .dark))
+        XCTAssertNotEqual(light, dark)
+        XCTAssertEqual(light, try OtpPalette.decode(data, scheme: .light))
+        XCTAssertEqual(dark, try OtpPalette.decode(data, scheme: .dark))
+    }
+
+    func testDecodeThrowsWhenTheColourFileIsMalformed() {
+        XCTAssertThrowsError(try OtpPalette.decode(Data("{}".utf8), scheme: .light))
+        XCTAssertThrowsError(try OtpPalette.decode(Data("[]".utf8), scheme: .dark))
+        XCTAssertThrowsError(try OtpPalette.decode(Data(), scheme: .light))
+    }
+
+    func testHexAcceptsBareAndSpacedValuesAndRejectsGarbage() {
+        let green = HexColor.parse("#12361B")
+        XCTAssertEqual(HexColor.parse("12361B"), green)
+        XCTAssertEqual(HexColor.parse("  #12361b\n"), green)
+        XCTAssertNil(HexColor.parse(""))
+        XCTAssertNil(HexColor.parse("#"))
+        XCTAssertNil(HexColor.parse("#12345"))
+        XCTAssertNil(HexColor.parse("#GGGGGG"))
+        XCTAssertNil(HexColor.parse("12361B99FF"))
     }
 }
